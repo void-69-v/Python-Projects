@@ -1,0 +1,8 @@
+Question :- What is the largest lake in India..?
+Answer :- 		Loktak Lake
+Question :- Which is the world’s largest ocean..? 
+Answer :- 		Pacific ocean
+Question :- What does DNA stand for..?
+Answer :- 		deoxyribonucleic acid
+Question :- Which country is known as the Land of the Rising Sun..?
+Answer :- 		Japan
