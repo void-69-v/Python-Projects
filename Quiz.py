@@ -1,5 +1,5 @@
 import csv
-import random
+import mysql.connector as ms
 
 count = 0
 c_w = 0
@@ -15,7 +15,7 @@ scoreR1 = 0
 scoreR2 = 0
 scoreR3 = 0
 scoreT = 0
-
+correct = wrong = skip = 0
 d_Q = {
     1: 'What is the largest lake in India..?',
     2: 'Which Country has the world’s best education system..?',
@@ -50,6 +50,7 @@ d_Q = {
     29: 'What is the capital of Russia..?',
     30: 'Who was the first woman to win a Nobel Prize?',
 }
+
 d_A = {
     1: 'Loktak Lake',
     2: 'United State',
@@ -82,6 +83,7 @@ d_A = {
     29: 'Moscow',
     30: 'Marie Curie',
 }
+# All question dictionary to list form
 Q1 = d_Q[1]
 Q2 = d_Q[2]
 Q3 = d_Q[3]
@@ -112,7 +114,7 @@ Q27 = d_Q[27]
 Q28 = d_Q[28]
 Q29 = d_Q[29]
 Q30 = d_Q[30]
-
+# All answer in dictionary to list form
 A1 = d_A[1]
 A2 = d_A[2]
 A3 = d_A[3]
@@ -191,19 +193,20 @@ def rules():  # rules wala part
     print("\t ''''Rules of the Game''''")
     print()
     print(
-        "\n\t There will be a total of 3 matches here \n\t\vif you think i don't want to  continue more then after it you can leave after that match whenever you want..."
+        '\n\t Yaaha Per total 3 round honge ,Agar apko 1 round khel ne baad or continue nahi krna toh aap exit kr skte ha or further continue bhi kr skte ho'
     )
+
+    print('\n\t Har round me alag alag 10 mcq type ke Question puche jayenge')
+    print('\n\t Har ek sahi sawal per 2 point.')
+    print('\n\t Har ek galat sawal per -1 point.')
+    print('\n\t Agar aap question skip krte ha to 0 point')
     print(
-        '\n\t In each match You will be asked a series of different types of 10 questions.'
-    )
-    print('\n\t Each right answer will be awarded 2 points.')
-    print('\n\t Each wrong answer will be awarded -1 points.')
-    print('\n\t You will be given 4 options to choose from.')
+        '''\n\t Aagar apne koi bhi invalid input kiya toh joo quiz voh automatically restart ho jayega  first question see...
+            score bhi 0 se start hoga''')
     print(
-        '\n\t If you made a mistake then the quiz automatically restart to the first question asked before.'
+        '\n\t Aapko Quiz ke end me total score or kitne question galat hue ha voh bataya jayega...'
     )
-    print('\n\t You will be given a score at the end of the game.')
-    print('\n\t \t\t""""Hope you understand ,Have fun..!!!""""')
+    print('\n\t \t\t"""" Hope you understand ,Have fun..!!!""""')
     print()
 
 
@@ -224,27 +227,34 @@ def round1():
         print('Question 1:-\n\n\t', Q1)
         print('\nOptions are\n\n\t\t', '1', ':', 'Suraj Tal Lake', '\n\t\t',
               '2', ':', 'Loktak Lake', '\n\t\t', '3', ':', 'Prashar Lake',
-              '\n\t\t', '4', ':', 'Sattal Lake')
+              '\n\t\t', '4', ':', 'Sattal Lake', '\n\t\t', '5', ':', 'Skip')
         ans = int(input('\n\nEnter the option number of your answer : '))
         d_user = {
             1: 'Suraj Tal Lake',
             2: 'Loktak Lake',
             3: 'Prashar Lake',
-            4: 'Sattal Lake'
+            4: 'Sattal Lake',
+            5: 'Skip'
         }
         user_ans = d_user[ans]
 
         if user_ans == A1:
-            flag = True
+            flag = 'correct'
             list.append(flag)
 
             print()
             scoreR1 = scoreR1 + 2
+        elif user_ans == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR1 = scoreR1 + 0
 
         else:
-            list.append(flag)
+
             c_w += 1
-            flag = False
+            flag = 'wrong'
+            list.append(flag)
             scoreR1 = scoreR1 - 1
             q = q + Q1 + '\n'
 
@@ -252,23 +262,30 @@ def round1():
         print('Question 2 :-\n\n\t', Q2)
         print('\nOptions are\n\n\t\t', '1', ':', 'United State', '\n\t\t', '2',
               ':', 'India', '\n\t\t', '3', ':', 'New Zealand', '\n\t\t', '4',
-              ':', 'Australlia')
+              ':', 'Australlia', '\n\t\t', '5', ':', 'Skip')
         ans2 = int(input('\n\nEnter the option number of your answer : '))
         d_user2 = {
             1: 'United State',
             2: 'India',
             3: 'New Zealand',
-            4: 'Australlia'
+            4: 'Australlia',
+            5: 'Skip'
         }
         user_ans2 = d_user2[ans2]
         if user_ans2 == A2:
             list.append(flag)
-            flag = True
+            flag = 'correct'
             print()
             scoreR1 = scoreR1 + 2
+        elif user_ans2 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR1 = scoreR1 + 0
+
         else:
             scoreR1 = scoreR1 - 1
-            flag = False
+            flag = 'wrong'
             list.append(flag)
             c_w += 1
             q = q + Q2 + '\n'
@@ -277,23 +294,29 @@ def round1():
         print('Question 3 :-\n\n\t', Q3)
         print('\nOptions are\n\n\t\t', '1', ':', 'Atlantic ocean', '\n\t\t',
               '2', ':', 'Indian ocean', '\n\t\t', '3', ':', 'Arctic Ocean',
-              '\n\t\t', '4', ':', 'Pacific ocean')
+              '\n\t\t', '4', ':', 'Pacific ocean', '\n\t\t', '5', ':', 'Skip')
         ans3 = int(input('\n\nEnter the option number of your answer : '))
         d_user3 = {
             1: 'Atlantic ocean',
             2: 'Indian ocean',
             3: 'Arctic Ocean',
-            4: 'Pacific ocean'
+            4: 'Pacific ocean',
+            5: 'Skip'
         }
         user_ans3 = d_user3[ans3]
         if user_ans3 == A3:
-            flag = True
+            flag = 'correct'
             list.append(flag)
             print()
             scoreR1 = scoreR1 + 2
-        else:
+        elif user_ans3 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR1 = scoreR1 + 0
 
-            flag = False
+        else:
+            flag = 'wrong'
             scoreR1 = scoreR1 - 1
             list.append(flag)
             c_w += 1
@@ -304,23 +327,30 @@ def round1():
               'Indian Scientific Research Organisation', '\n\t\t', '2', ':',
               'International Sports Research Organisation', '\n\t\t', '3', ':',
               'Indian Space Research Organisation', '\n\t\t', '4', ':',
-              'International Speech Reaseach Organisation')
+              'International Speech Reaseach Organisation', '\n\t\t', '5', ':',
+              'Skip')
         ans4 = int(input('\n\nEnter the option number of your answer : '))
         d_user4 = {
             1: 'Indian Scientific Research Organisation',
             2: 'International Sports Research Organisation',
             3: 'Indian Space Research Organisation',
-            4: 'International Speech Reaseach Organisation'
+            4: 'International Speech Reaseach Organisation',
+            5: 'Skip'
         }
         user_ans4 = d_user4[ans4]
         if user_ans4 == A4:
-            flag = True
+            flag = 'correct'
             list.append(flag)
             print()
             scoreR1 = scoreR1 + 2
+        elif user_ans4 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR1 = scoreR1 + 0
         else:
             scoreR1 = scoreR1 - 1
-            flag = False
+            flag = 'wrong'
             list.append(flag)
             q = q + Q4 + '\n'
             c_w += 1
@@ -329,18 +359,29 @@ def round1():
 
         print('\nOptions are\n\n\t\t', '1', ':', 'Asia', '\n\t\t', '2', ':',
               'Australlia', '\n\t\t', '3', ':', 'Africa', '\n\t\t', '4', ':',
-              'Europe')
+              'Europe', '\n\t\t', '5', ':', 'Skip')
         ans5 = int(input('\n\nEnter the option number of your answer : '))
-        d_user5 = {1: 'Asia', 2: 'Australlia', 3: 'Africa', 4: 'Europe'}
+        d_user5 = {
+            1: 'Asia',
+            2: 'Australlia',
+            3: 'Africa',
+            4: 'Europe',
+            5: 'Skip'
+        }
         user_ans5 = d_user5[ans5]
         if user_ans5 == A5:
-            flag = True
+            flag = 'correct'
             list.append(flag)
             print()
             scoreR1 = scoreR1 + 2
+        elif user_ans5 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR1 = scoreR1 + 0
         else:
             scoreR1 = scoreR1 - 1
-            flag = False
+            flag = 'wrong'
             list.append(flag)
             c_w += 1
             q = q + Q5 + '\n'
@@ -349,18 +390,29 @@ def round1():
         print('Question 6 :-\n\n\t', Q6)
         print('\nOptions are\n\n\t\t', '1', ':', 'Crow', '\n\t\t', '2', ':',
               'Ostrich', '\n\t\t', '3', ':', 'Peacock', '\n\t\t', '4', ':',
-              'Bald Eagle')
+              'Bald Eagle', '\n\t\t', '5', ':', 'Skip')
         ans6 = int(input('\n\nEnter the option number of your answer : '))
-        d_user6 = {1: 'Crow', 2: 'Ostrich', 3: 'Peacock', 4: 'Bald Eagle'}
+        d_user6 = {
+            1: 'Crow',
+            2: 'Ostrich',
+            3: 'Peacock',
+            4: 'Bald Eagle',
+            5: 'Skip'
+        }
         user_ans6 = d_user6[ans6]
         if user_ans6 == A6:
-            flag = True
+            flag = 'correct'
             list.append(flag)
             print()
             scoreR1 = scoreR1 + 2
+        elif user_ans6 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR1 = scoreR1 + 0
         else:
             scoreR1 = scoreR1 - 1
-            flag = False
+            flag = 'wrong'
             list.append(flag)
             c_w += 1
             q = q + Q6 + '\n'
@@ -368,23 +420,30 @@ def round1():
         print('Question 7 :-\n\n\t', Q7)
         print('\nOptions are\n\n\t\t', '1', ':', 'deoxyribeneutral acid',
               '\n\t\t', '2', ':', 'dyoxyenucleic acid', '\n\t\t', '3', ':',
-              'deoxyribonucleic acid', '\n\t\t', '4', ':', 'deltanucleic acid')
+              'deoxyribonucleic acid', '\n\t\t', '4', ':', 'deltanucleic acid',
+              '\n\t\t', '5', ':', 'Skip')
         ans7 = int(input('\n\nEnter the option number of your answer : '))
         d_user7 = {
             1: 'deoxyribeneutral acid',
             2: 'dyoxyenucleic acid',
             3: 'deoxyribonucleic acid',
-            4: 'deltanucleic acid'
+            4: 'deltanucleic acid',
+            5: 'Skip'
         }
         user_ans7 = d_user7[ans7]
         if user_ans7 == A7:
-            flag = True
+            flag = 'correct'
             list.append(flag)
             print()
             scoreR1 = scoreR1 + 2
+        elif user_ans7 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR1 = scoreR1 + 0
         else:
             scoreR1 = scoreR1 - 1
-            flag = False
+            flag = 'wrong'
             list.append(flag)
             c_w += 1
             q = q + Q7 + '\n'
@@ -392,18 +451,29 @@ def round1():
         print('Question 8 :-\n\n\t', Q8)
         print('\nOptions are\n\n\t\t', '1', ':', 'China', '\n\t\t', '2', ':',
               'Japan', '\n\t\t', '3', ':', 'India', '\n\t\t', '4', ':',
-              'United States')
+              'United States', '\n\t\t', '5', ':', 'Skip')
         ans8 = int(input('\n\nEnter the option number of your answer : '))
-        d_user8 = {1: 'China', 2: 'Japan', 3: 'India', 4: 'United States'}
+        d_user8 = {
+            1: 'China',
+            2: 'Japan',
+            3: 'India',
+            4: 'United States',
+            5: 'Skip'
+        }
         user_ans8 = d_user8[ans8]
         if user_ans8 == A8:
-            flag = True
+            flag = 'correct'
             list.append(flag)
             print()
             scoreR1 = scoreR1 + 2
+        elif user_ans8 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR1 = scoreR1 + 0
         else:
             scoreR1 = scoreR1 - 1
-            flag = False
+            flag = 'wrong'
             list.append(flag)
             c_w += 1
             q = q + Q8 + '\n'
@@ -411,13 +481,15 @@ def round1():
         print('Question 9 :-\n\n\t', Q9)
         print('\nOptions are\n\n\t\t', '1', ':', 'George Washington', '\n\t\t',
               '2', ':', 'Abraham Lincoln', '\n\t\t', '3', ':',
-              'Thomas Jefferson', '\n\t\t', '4', ':', 'John Adams')
+              'Thomas Jefferson', '\n\t\t', '4', ':', 'John Adams', '\n\t\t',
+              '5', ':', 'Skip')
         ans9 = int(input('\n\nEnter the option number of your answer : '))
         d_user9 = {
             1: 'George Washington',
             2: 'Abraham Lincoln',
             3: 'Thomas Jefferson',
-            4: 'John Adams'
+            4: 'John Adams',
+            5: 'Skip'
         }
         user_ans9 = d_user9[ans9]
         if user_ans9 == A9:
@@ -425,6 +497,11 @@ def round1():
             list.append(flag)
             print()
             scoreR1 = scoreR1 + 2
+        elif user_ans9 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR1 = scoreR1 + 0
         else:
             scoreR1 = scoreR1 - 1
             flag = False
@@ -435,13 +512,15 @@ def round1():
         print('Question 10 :-\n\n\t', Q10)
         print('\nOptions are\n\n\t\t', '1', ':', 'Charles Dickens', '\n\t\t',
               '2', ':', 'William Shakespeare', '\n\t\t', '3', ':',
-              'George Orwell', '\n\t\t', '4', ':', 'Jane Austen')
+              'George Orwell', '\n\t\t', '4', ':', 'Jane Austen', '\n\t\t',
+              '5', ':', 'Skip')
         ans10 = int(input('\n\nEnter the option number of your answer : '))
         d_user10 = {
             1: 'Charles Dickens',
             2: 'William Shakespeare',
             3: 'George Orwell',
-            4: 'Jane Austen'
+            4: 'Jane Austen',
+            5: 'Skip'
         }
         user_ans10 = d_user10[ans10]
         if user_ans10 == A10:
@@ -449,6 +528,11 @@ def round1():
             list.append(flag)
             print()
             scoreR1 = scoreR1 + 2
+        elif user_ans10 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR1 = scoreR1 + 0
         else:
             scoreR1 = scoreR1 - 1
             flag = False
@@ -461,40 +545,60 @@ def round1():
         print()
     except ValueError:
         print()
-        q=''
+        q = ''
+        print()
+        print(
+            '*****************************************************************************************************'
+        )
         print('\t\tWarning...!!')
         print('\n\tPlease enter the correct option number')
         print('\n\tThis is your puniment you have to play again')
         print()
+        print(
+            '*****************************************************************************************************'
+        )
+        scoreR1 = 0
         round1()
     except IndexError:
         print()
         q = ''
+        print()
+        print(
+            '*****************************************************************************************************'
+        )
         print('\t\tWarning...!!')
         print('\n\tPlease enter the correct option number')
         print('This is your puniment you have to play again')
         print()
+        print(
+            '*****************************************************************************************************'
+        )
+        scoreR1 = 0
         round1()
     except KeyError:
         print()
         q = ''
+        print()
+        print(
+            '*****************************************************************************************************'
+        )
         print('\t\tWarning...!!')
         print('\n\tPlease enter the correct option number')
         print('This is your puniment you have to play again')
         print()
+        print(
+            '*****************************************************************************************************'
+        )
+        scoreR1 = 0
         round1()
-    else:
-        print(f'Your score is : {scoreR1} out of 20')
-        print()
 
 
 # **** Round 2 begin ****
 def round2():
-
     global scoreR2
     global q2
     global c_w2
-
+    global flag
     print('\n\t\tHelllo',
           f'{User_name} and welcome again  to the Quiz next round')
     print()
@@ -502,15 +606,21 @@ def round2():
 
         print('Question 11 :-\n\n\t', Q11)
         print('\nOptions are\n\n\t\t', '1', ':', '1912', '\n\t\t', '2', ':',
-              '1905', '\n\t\t', '3', ':', '1914', '\n\t\t', '4', ':', '1920')
+              '1905', '\n\t\t', '3', ':', '1914', '\n\t\t', '4', ':', '1920',
+              '\n\t\t', '5', ':', 'Skip')
         ans11 = int(input('\n\nEnter the option number of your answer : '))
-        d_user11 = {1: '1912', 2: '1905', 3: '1914', 4: '1920'}
+        d_user11 = {1: '1912', 2: '1905', 3: '1914', 4: '1920', 5: 'Skip'}
         user_ans11 = d_user11[ans11]
         if user_ans11 == A11:
             flag = True
             list.append(flag)
             print()
             scoreR2 = scoreR2 + 2
+        elif user_ans11 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR2 = scoreR2 + 0
         else:
             scoreR2 = scoreR2 - 1
             flag = False
@@ -521,13 +631,14 @@ def round2():
         print('Question 12:-\n\n\t', Q12)
         print('\nOptions are\n\n\t\t', '1', ':', 'Amazon River', '\n\t\t', '2',
               ':', 'Nile River', '\n\t\t', '3', ':', 'Mississippi River',
-              '\n\t\t', '4', ':', 'Yangtze River')
+              '\n\t\t', '4', ':', 'Yangtze River', '\n\t\t', '5', ':', 'Skip')
         ans12 = int(input('\n\nEnter the option number of your answer : '))
         d_user12 = {
             1: 'Amazon River',
             2: 'Nile River',
             3: 'Mississippi River',
-            4: 'Yangtze River'
+            4: 'Yangtze River',
+            5: 'Skip'
         }
         user_ans12 = d_user12[ans12]
         if user_ans12 == A12:
@@ -535,6 +646,11 @@ def round2():
             list.append(flag)
             print()
             scoreR2 = scoreR2 + 2
+        elif user_ans12 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR2 = scoreR2 + 0
         else:
             flag = False
             list.append(flag)
@@ -544,15 +660,21 @@ def round2():
             print()
         print('Question 13 :-\n\n\t', Q13)
         print('\nOptions are\n\n\t\t', '1', ':', '1945', '\n\t\t', '2', ':',
-              '1914', '\n\t\t', '3', ':', '1939', '\n\t\t', '4', ':', '1920')
+              '1914', '\n\t\t', '3', ':', '1939', '\n\t\t', '4', ':', '1920',
+              '\n\t\t', '5', ':', 'Skip')
         ans13 = int(input('\n\nEnter the option number of your answer : '))
-        d_user13 = {1: '1945', 2: '1914', 3: '1939', 4: '1920'}
+        d_user13 = {1: '1945', 2: '1914', 3: '1939', 4: '1920', 5: 'Skip'}
         user_ans13 = d_user13[ans13]
         if user_ans13 == A13:
             flag = True
             list.append(flag)
             print()
             scoreR2 = scoreR2 + 2
+        elif user_ans13 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR2 = scoreR2 + 0
         else:
             flag = False
             scoreR2 = scoreR2 - 1
@@ -563,15 +685,26 @@ def round2():
         print('Question 14 :-\n\n\t', Q14)
         print('\nOptions are\n\n\t\t', '1', ':', 'Oxygen', '\n\t\t', '2', ':',
               'Hydrogen', '\n\t\t', '3', ':', 'Carbon', '\n\t\t', '4', ':',
-              'Nitrogen')
+              'Nitrogen', '\n\t\t', '5', ':', 'Skip')
         ans14 = int(input('\n\nEnter the option number of your answer : '))
-        d_user14 = {1: 'Oxygen', 2: 'Hydrogen', 3: 'Carbon', 4: 'Nitrogen'}
+        d_user14 = {
+            1: 'Oxygen',
+            2: 'Hydrogen',
+            3: 'Carbon',
+            4: 'Nitrogen',
+            5: 'Skip'
+        }
         user_ans14 = d_user14[ans14]
         if user_ans14 == A14:
             flag = True
             list.append(flag)
             print()
             scoreR2 = scoreR2 + 2
+        elif user_ans14 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR2 = scoreR2 + 0
         else:
             flag = False
             list.append(flag)
@@ -581,7 +714,9 @@ def round2():
             print()
         print('Question 15 :-\n\n\t', Q15)
         print('\nOptions are\n\n\t\t', '1', ':', '1945', '\n\t\t', '2', ':',
-              '1914', '\n\t\t', '3', ':', '1939', '\n\t\t', '4', ':', '1920')
+              '1914', '\n\t\t', '3', ':', '1939', '\n\t\t', '4', ':', '1920',
+              '\n\t\t', '5', ':', 'Skip')
+
         ans15 = int(input('\n\nEnter the option number of your answer : '))
         d_user15 = {1: '1945', 2: '1914', 3: '1939', 4: '1920'}
         user_ans15 = d_user15[ans15]
@@ -590,6 +725,11 @@ def round2():
             list.append(flag)
             print()
             scoreR2 = scoreR2 + 2
+        elif user_ans15 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR2 = scoreR2 + 0
         else:
             flag = False
             list.append(flag)
@@ -600,9 +740,15 @@ def round2():
         print('Question 16 :-\n\n\t', Q16)
         print('\nOptions are\n\n\t\t', '1', ':', 'Pound Sterling', '\n\t\t',
               '2', ':', 'Euro', '\n\t\t', '3', ':', 'Dollar', '\n\t\t', '4',
-              ':', 'Yen')
+              ':', 'Yen', '\n\t\t', '5', ':', 'Skip')
         ans16 = int(input('\n\nEnter the option number of your answer : '))
-        d_user16 = {1: 'Pound Sterling', 2: 'Euro', 3: 'Dollar', 4: 'Yen'}
+        d_user16 = {
+            1: 'Pound Sterling',
+            2: 'Euro',
+            3: 'Dollar',
+            4: 'Yen',
+            5: 'Skip'
+        }
 
         user_ans16 = d_user16[ans16]
         if user_ans16 == A16:
@@ -610,6 +756,11 @@ def round2():
             list.append(flag)
             print()
             scoreR2 = scoreR2 + 2
+        elif user_ans16 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR2 = scoreR2 + 0
         else:
             flag = False
             list.append(flag)
@@ -620,13 +771,15 @@ def round2():
         print('Question 17 :-\n\n\t', Q17)
         print('\nOptions are\n\n\t\t', '1', ':', 'Gregor Mendel', '\n\t\t',
               '2', ':', 'Albert Einstein', '\n\t\t', '3', ':', 'Isaac Newton',
-              '\n\t\t', '4', ':', 'Alexander Fleming')
+              '\n\t\t', '4', ':', 'Alexander Fleming', '\n\t\t', '5', ':',
+              'Skip')
         ans17 = int(input('\n\nEnter the option number of your answer : '))
         d_user17 = {
             1: 'Gregor Mendel',
             2: 'Albert Einstein',
             3: 'Isaac Newton',
-            4: 'Alexander Fleming'
+            4: 'Alexander Fleming',
+            5: 'Skip'
         }
         user_ans17 = d_user17[ans17]
         if user_ans17 == A17:
@@ -634,6 +787,11 @@ def round2():
             list.append(flag)
             print()
             scoreR2 = scoreR2 + 2
+        elif user_ans17 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR2 = scoreR2 + 0
         else:
             scoreR2 = scoreR2 - 1
             flag = False
@@ -643,15 +801,21 @@ def round2():
             print()
         print('Question 18 :-\n\n\t', Q18)
         print('\nOptions are\n\n\t\t', '1', ':', 'Organ', '\n\t\t', '2', ':',
-              'Tissue', '\n\t\t', '3', ':', 'Cell', '\n\t\t', '4', ':', 'Atom')
+              'Tissue', '\n\t\t', '3', ':', 'Cell', '\n\t\t', '4', ':', 'Atom',
+              '\n\t\t', '5', ':', 'Skip')
         ans18 = int(input('\n\nEnter the option number of your answer : '))
-        d_user18 = {1: 'Organ', 2: 'Tissue', 3: 'Cell', 4: 'Atom'}
+        d_user18 = {1: 'Organ', 2: 'Tissue', 3: 'Cell', 4: 'Atom', 5: 'Skip'}
         user_ans18 = d_user18[ans18]
         if user_ans18 == A18:
             flag = True
             list.append(flag)
             print()
             scoreR2 = scoreR2 + 2
+        elif user_ans18 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR2 = scoreR2 + 0
         else:
             flag = False
             scoreR2 = scoreR2 - 1
@@ -661,15 +825,22 @@ def round2():
             print()
         print('Question 19 :-\n\n\t', Q19)
         print('\nOptions are\n\n\t\t', '1', ':', 'A+', '\n\t\t', '2', ':',
-              'B-', '\n\t\t', '3', ':', 'O', '\n\t\t', '4', ':', 'AB')
+              'B-', '\n\t\t', '3', ':', 'O', '\n\t\t', '4', ':', 'AB',
+              '\n\t\t', '5', ':', 'Skip')
         ans19 = int(input('\n\nEnter the option number of your answer : '))
-        d_user19 = {1: 'A+', 2: 'B-', 3: 'O', 4: 'AB'}
+        d_user19 = {1: 'A+', 2: 'B-', 3: 'O', 4: 'AB', 5: 'Skip'}
         user_ans19 = d_user19[ans19]
         if user_ans19 == A19:
             flag = True
             list.append(flag)
             print()
             scoreR2 = scoreR2 + 2
+        elif user_ans19 == 'Skip':
+
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR2 = scoreR2 + 0
         else:
             flag = False
             scoreR2 = scoreR2 - 1
@@ -680,15 +851,27 @@ def round2():
         print('Question 20 :-\n\n\t', Q20)
         print('\nOptions are\n\n\t\t', '1', ':', 'Toronto', '\n\t\t', '2', ':',
               'Vancouver', '\n\t\t', '3', ':', 'Montreal', '\n\t\t', '4', ':',
-              'Ottawa')
+              'Ottawa', '\n\t\t', '5', ':', 'Skip')
         ans20 = int(input('\n\nEnter the option number of your answer : '))
-        d_user20 = {1: 'Toronto', 2: 'Vancouver', 3: 'Montreal', 4: 'Ottawa'}
+        d_user20 = {
+            1: 'Toronto',
+            2: 'Vancouver',
+            3: 'Montreal',
+            4: 'Ottawa',
+            5: 'Skip'
+        }
         user_ans20 = d_user20[ans20]
         if user_ans20 == A20:
             flag = True
             list.append(flag)
             print()
             scoreR2 = scoreR2 + 2
+        elif user_ans20 == 'Skip':
+
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR2 = scoreR2 + 0
         else:
             flag = False
             list.append(flag)
@@ -699,38 +882,55 @@ def round2():
         #print('Your score is :', scoreR2)
         print()
     except ValueError:
-        q2 =''
+        q2 = ''
         print()
+        print(
+            '*****************************************************************************************************'
+        )
         print('\t\tWarning...!!')
         print('\n\tPlease enter the correct option number')
         print('This is your puniment you have to play again')
         print()
+        print(
+            '*****************************************************************************************************'
+        )
+        scoreR2 = 0
         round2()
     except IndexError:
-        q2 =''
+        q2 = ''
         print()
+        print(
+            '*****************************************************************************************************'
+        )
+        scoreR2 = 0
         print('\t\tWarning...!!')
         print('\n\tPlease enter the correct option number')
         print('This is your puniment you have to play again')
         print()
+        print(
+            '*****************************************************************************************************'
+        )
         round2()
     except KeyError:
-        q2=''
+        q2 = ''
         print()
+        print(
+            '*****************************************************************************************************'
+        )
+        scoreR2 = 0
         print('\t\tWarning...!!')
         print('\n\tPlease enter the correct option number')
         print('This is your puniment you have to play again')
         print()
+        print(
+            '*****************************************************************************************************'
+        )
         round2()
-    else:
-
-        print(f'Your score is : {scoreR2} out of 20')
-        print()
 
 
 # **** Round 3 begin ****
 def round3():
-
+    global flag
     global scoreR3
     global q3
     global c_w3
@@ -740,22 +940,29 @@ def round3():
         print('Question 21 :-\n\n\t', Q21)
         print('\nOptions are\n\n\t\t', '1', ':', 'Thomas Edison', '\n\t\t',
               '2', ':', 'Albert Einstein', '\n\t\t', '3', ':', 'Isaac Newton',
-              '\n\t\t', '4', ':', 'Alexander Fleming')
+              '\n\t\t', '4', ':', 'Alexander Fleming', '\n\t\t', '5', ':',
+              'Skip')
         ans21 = int(input('\n\nEnter the option number of your answer : '))
         d_user21 = {
             1: 'Thomas Edison',
             2: 'Albert Einstein',
             3: 'Isaac Newton',
-            4: 'Alexander Fleming'
+            4: 'Alexander Fleming',
+            5: 'Skip'
         }
         user_ans21 = d_user21[ans21]
         if user_ans21 == A21:
-            flag = True
+            flag = 'correct'
             list.append(flag)
             print()
             scoreR3 = scoreR3 + 2
+        elif user_ans21 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR3 = scoreR3 + 0
         else:
-            flag = False
+            flag = 'wrong'
             scoreR3 = scoreR3 - 1
             list.append(flag)
             c_w3 += 1
@@ -764,15 +971,26 @@ def round3():
         print('Question 22 :-\n\n\t', Q22)
         print('\nOptions are\n\n\t\t', '1', ':', 'Silver', '\n\t\t', '2', ':',
               'Gold (Au)', '\n\t\t', '3', ':', 'Carbon', '\n\t\t', '4', ':',
-              'Platanium')
+              'Platanium', '\n\t\t', '5', ':', 'Skip')
         ans22 = int(input('\n\nEnter the option number of your answer : '))
-        d_user22 = {1: 'Silver', 2: 'Gold (Au)', 3: 'Carbon', 4: 'Platanium'}
+        d_user22 = {
+            1: 'Silver',
+            2: 'Gold (Au)',
+            3: 'Carbon',
+            4: 'Platanium',
+            5: 'Skip'
+        }
         user_ans22 = d_user22[ans22]
         if user_ans22 == A22:
             flag = True
             list.append(flag)
             print()
             scoreR3 = scoreR3 + 2
+        elif user_ans22 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR3 = scoreR3 + 0
         else:
             flag = False
             scoreR3 = scoreR3 - 1
@@ -783,15 +1001,26 @@ def round3():
         print('Question 23 :-\n\n\t', Q23)
         print('\nOptions are\n\n\t\t', '1', ':', 'Carbon', '\n\t\t', '2', ':',
               'Oxygen', '\n\t\t', '3', ':', 'Nitrogen', '\n\t\t', '4', ':',
-              'Hydrogen')
+              'Hydrogen', '\n\t\t', '5', ':', 'Skip')
         ans23 = int(input('\n\nEnter the option number of your answer : '))
-        d_user23 = {1: 'Carbon', 2: 'Oxygen', 3: 'Nitrogen', 4: 'Hydrogen'}
+        d_user23 = {
+            1: 'Carbon',
+            2: 'Oxygen',
+            3: 'Nitrogen',
+            4: 'Hydrogen',
+            5: 'Skip'
+        }
         user_ans23 = d_user23[ans23]
         if user_ans23 == A23:
             flag = True
             list.append(flag)
             print()
             scoreR3 = scoreR3 + 2
+        elif user_ans23 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR3 = scoreR3 + 0
         else:
             flag = False
             list.append(flag)
@@ -802,13 +1031,14 @@ def round3():
         print('Question 24 :-\n\n\t', Q24)
         print('\nOptions are\n\n\t\t', '1', ':', 'Brazilian', '\n\t\t', '2',
               ':', 'American', '\n\t\t', '3', ':', 'Canadian', '\n\t\t', '4',
-              ':', 'Portuguese')
+              ':', 'Portuguese', '\n\t\t', '5', ':', 'Skip')
         ans24 = int(input('\n\nEnter the option number of your answer : '))
         d_user24 = {
             1: 'Brazilian',
             2: 'American',
             3: 'Canadian',
-            4: 'Portuguese'
+            4: 'Portuguese',
+            5: 'Skip'
         }
         user_ans24 = d_user24[ans24]
         if user_ans24 == A24:
@@ -816,6 +1046,11 @@ def round3():
             list.append(flag)
             print()
             scoreR3 = scoreR3 + 2
+        elif user_ans24 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR3 = scoreR3 + 0
         else:
             flag = False
             list.append(flag)
@@ -826,15 +1061,26 @@ def round3():
         print('Question 25 :-\n\n\t', Q25)
         print('\nOptions are\n\n\t\t', '1', ':', 'Gold', '\n\t\t', '2', ':',
               'Silver', '\n\t\t', '3', ':', 'Copper', '\n\t\t', '4', ':',
-              'Platinum')
+              'Platinum', '\n\t\t', '5', ':', 'Skip')
         ans25 = int(input('\n\nEnter the option number of your answer : '))
-        d_user25 = {1: 'Gold', 2: 'Silver', 3: 'Copper', 4: 'Platinum'}
+        d_user25 = {
+            1: 'Gold',
+            2: 'Silver',
+            3: 'Copper',
+            4: 'Platinum',
+            5: 'Skip'
+        }
         user_ans25 = d_user25[ans25]
         if user_ans25 == A25:
             flag = True
             list.append(flag)
             print()
             scoreR3 = scoreR3 + 2
+        elif user_ans25 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR3 = scoreR3 + 0
         else:
             flag = False
             list.append(flag)
@@ -845,13 +1091,14 @@ def round3():
         print('Question 26 :-\n\n\t', Q26)
         print('\nOptions are\n\n\t\t', '1', ':', 'Arctic Ocean', '\n\t\t', '2',
               ':', 'Atlantic Ocean', '\n\t\t', '3', ':', 'Indian Ocean',
-              '\n\t\t', '4', ':', 'Pacific Ocean')
+              '\n\t\t', '4', ':', 'Pacific Ocean', '\n\t\t', '5', ':', 'Skip')
         ans26 = int(input('\n\nEnter the option number of your answer : '))
         d_user26 = {
             1: 'Arctic Ocean',
             2: 'Atlantic Ocean',
             3: 'Indian Ocean',
-            4: 'Pacific Ocean'
+            4: 'Pacific Ocean',
+            5: 'Skip'
         }
         user_ans26 = d_user26[ans26]
         if user_ans26 == A26:
@@ -859,6 +1106,11 @@ def round3():
             list.append(flag)
             print()
             scoreR3 = scoreR3 + 2
+        elif user_ans26 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR3 = scoreR3 + 0
         else:
             scoreR3 = scoreR3 - 1
             flag = False
@@ -869,13 +1121,14 @@ def round3():
         print('Question 27 :-\n\n\t', Q27)
         print('\nOptions are\n\n\t\t', '1', ':', 'Vitamin B12', '\n\t\t', '2',
               ':', 'Vitamin D', '\n\t\t', '3', ':', 'Vitamin B6', '\n\t\t',
-              '4', ':', 'Vitamin B9')
+              '4', ':', 'Vitamin B9', '\n\t\t', '5', ':', 'Skip')
         ans27 = int(input('\n\nEnter the option number of your answer : '))
         d_user27 = {
             1: 'Vitamin B12',
             2: 'Vitamin D',
             3: 'Vitamin B6',
-            4: 'Vitamin B9'
+            4: 'Vitamin B9',
+            5: 'Skip'
         }
         user_ans27 = d_user27[ans27]
         if user_ans27 == A27:
@@ -883,6 +1136,11 @@ def round3():
             list.append(flag)
             print()
             scoreR3 = scoreR3 + 2
+        elif user_ans27 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR3 = scoreR3 + 0
         else:
             flag = False
             list.append(flag)
@@ -893,13 +1151,15 @@ def round3():
         print('Question 28 :-\n\n\t', Q28)
         print('\nOptions are\n\n\t\t', '1', ':', 'Alexander Graham Bell',
               '\n\t\t', '2', ':', 'Thomas Edison', '\n\t\t', '3', ':',
-              'Isaac Newton', '\n\t\t', '4', ':', 'Alexander Fleming')
+              'Isaac Newton', '\n\t\t', '4', ':', 'Alexander Fleming',
+              '\n\t\t', '5', ':', 'Skip')
         ans28 = int(input('\n\nEnter the option number of your answer : '))
         d_user28 = {
             1: 'Alexander Graham Bell',
             2: 'Thomas Edison',
             3: 'Isaac Newton',
-            4: 'Alexander Fleming'
+            4: 'Alexander Fleming',
+            5: 'Skip'
         }
         user_ans28 = d_user28[ans28]
         if user_ans28 == A28:
@@ -907,6 +1167,11 @@ def round3():
             list.append(flag)
             print()
             scoreR3 = scoreR3 + 2
+        elif user_ans28 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR3 = scoreR3 + 0
         else:
             flag = False
             scoreR3 = scoreR3 - 1
@@ -917,15 +1182,20 @@ def round3():
         print('Question 29 :-\n\n\t', Q29)
         print('\nOptions are\n\n\t\t', '1', ':', 'Moscow', '\n\t\t', '2', ':',
               'Paris', '\n\t\t', '3', ':', 'Rome', '\n\t\t', '4', ':',
-              'London')
+              'London', '\n\t\t', '5', ':', 'Skip')
         ans29 = int(input('\n\nEnter the option number of your answer : '))
-        d_user29 = {1: 'Moscow', 2: 'Paris', 3: 'Rome', 4: 'London'}
+        d_user29 = {1: 'Moscow', 2: 'Paris', 3: 'Rome', 4: 'London', 5: 'Skip'}
         user_ans29 = d_user29[ans29]
         if user_ans29 == A29:
             flag = True
             list.append(flag)
             print()
             scoreR3 = scoreR3 + 2
+        elif user_ans29 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR3 = scoreR3 + 0
         else:
             flag = False
             list.append(flag)
@@ -936,13 +1206,14 @@ def round3():
         print('Question 30 :-\n\n\t', Q30)
         print('\nOptions are\n\n\t\t', '1', ':', 'Rosalind Franklin', '\n\t\t',
               '2', ':', 'Newton', '\n\t\t', '3', ':', 'Marie Curie', '\n\t\t',
-              '4', ':', 'Jane Austen')
+              '4', ':', 'Jane Austen', '\n\t\t', '5', ':', 'Skip')
         ans30 = int(input('\n\nEnter the option number of your answer : '))
         d_user30 = {
             1: 'Rosalind Franklin',
             2: 'Newton',
             3: 'Marie Curie',
-            4: 'Jane Austen'
+            4: 'Jane Austen',
+            5: 'Skip'
         }
         user_ans30 = d_user30[ans30]
         if user_ans30 == A30:
@@ -950,6 +1221,11 @@ def round3():
             list.append(flag)
             print()
             scoreR3 = scoreR3 + 2
+        elif user_ans30 == 'Skip':
+            flag = 'Skip'
+            list.append(flag)
+            print()
+            scoreR3 = scoreR3 + 0
         else:
             scoreR3 = scoreR3 - 1
             flag = False
@@ -959,32 +1235,50 @@ def round3():
             print()
         #print('Your score is :', scoreR3)
     except ValueError:
-        q3=''
+        q3 = ''
+        scoreR3 = 0
         print()
+        print(
+            '*****************************************************************************************************'
+        )
         print('\t\tWarning...!!')
         print('\n\tPlease enter the correct option number')
         print('This is your puniment you have to play again')
         print()
+        print(
+            '*****************************************************************************************************'
+        )
         round3()
     except KeyError:
-        q3=''
+        q3 = ''
+        scoreR3 = 0
         print()
+        print(
+            '*****************************************************************************************************'
+        )
         print('\t\tWarning...!!')
         print('\n\tPlease enter the correct option number')
         print('This is your puniment you have to play again')
         print()
+        print(
+            '*****************************************************************************************************'
+        )
         round3()
     except IndexError:
-        q3 =''
+        q3 = ''
+        scoreR3 = 0
         print()
+        print(
+            '*****************************************************************************************************'
+        )
         print('\t\tWarning...!!')
         print('\n\tPlease enter the correct option number')
         print('This is your puniment you have to play again')
         print()
+        print(
+            '*****************************************************************************************************'
+        )
         round3()
-    else:
-        print(f'Your score is : {scoreR3}')
-        print()
 
 
 def Quiz():
@@ -997,6 +1291,12 @@ def Quiz():
     f = open('quiz.txt', 'w')
     if count == 0:
         round1()
+        print()
+        print(
+            '*****************************************************************************************************'
+        )
+        print('\n\t\t\t ------Result-------')
+        print('\n\tYour score is :', scoreR1)
         temp = q.split('\n')
 
         for i in temp:
@@ -1004,39 +1304,105 @@ def Quiz():
                 f.write(f'Question :- {i}')
                 f.write('\n')
                 f.write(f'Answer :- \t\t{switch[i]}\n')
+        print(
+            '-------------------------------------------------------------------------------------'
+        )
+        if c_w == 0:
 
-        print(f'The number of questions are wrong :{c_w} which are:-')
+            print(f'\nThe number of questions are wrong :{c_w}')
+            print(f'\n\tCongratulations..... {User_name}')
+        else:
+            print(f'\n\tThe number of questions are wrong :{c_w} which are:-')
+            print('\n\t You can do better in next round')
+        print()
 
     elif count == 1:
         round2()
+        print()
+        print(
+            '*****************************************************************************************************'
+        )
+        print('\n\t\t\t-------Result-------')
+        print('\n\tYour score is :', scoreR2)
         temp = q2.split('\n')
         for i in temp:
             if i != '':
                 f.write(f'Question :- {i}')
                 f.write('\n')
                 f.write(f'Answer :- \t\t{switch[i]}\n')
-        print(f'The number of questions are wrong :{c_w2} which are:-')
+        print(
+            '-------------------------------------------------------------------------------------'
+        )
+        if c_w2 == 0:
+
+            print(f'\n\tThe number of questions are wrong :{c_w2}')
+            print(f'\n\tCongratulations..... {User_name}')
+        else:
+            print(f'\n\tThe number of questions are wrong :{c_w2} which are:-')
+            print('\n\t You can do better in next round')
+        print()
+
     elif count == 2:
         round3()
+        print()
+        print(
+            '*****************************************************************************************************'
+        )
+        print('\n\t\t\t-------Result-------')
+        print('\n\tYour score is :', scoreR3)
         temp = q3.split('\n')
         for i in temp:
             if i != '':
                 f.write(f'Question :- {i}')
                 f.write('\n')
                 f.write(f'Answer :- \t\t{switch[i]}\n')
-        print(f'The number of questions are wrong :{c_w3} which are:-')
-    elif count > 2:
-        print('You have completed the quiz')
-        print()
-        scoreT = scoreR1 + scoreR2 + scoreR3
-        print('Your Total score is :', scoreT)
-        exit()
-    f.close()
+        print(
+            '-------------------------------------------------------------------------------------'
+        )
+        if c_w3 == 0:
 
+            print(f'\n\tThe number of questions are wrong :{c_w3}')
+            print(f'\n\tCongratulations..... {User_name}')
+        else:
+            print(f'\n\tThe number of questions are wrong :{c_w} which are:-')
+            print('\n\t You can do better in next round')
+        print()
+   
+    elif count == 3:
+        print()
+        print(
+            '*****************************************************************************************************'
+        )
+        print(
+            '*****************************************************************************************************'
+        )
+        print('\n\t\t\t-------Final Result-------')
+        print('\n\tYou have completed the quiz')
+        print()
+        scoreT  = scoreR1+scoreR2+scoreR3
+        print('\tYour Total score is :', scoreT, 'out of 60')
+        f = open('quiz.txt', 'r')
+        print()
+        c_w_net = c_w + c_w2 + c_w3
+        print(f'The number of questions are wrong :{c_w_net} \n\twhich are:-')
+        r = f.readlines()
+        print()
+        for i in r:
+            print(i)
+        print()
+        print(
+            '*****************************************************************************************************'
+        )
+        exit()
+        print()
+
+    f.close()
+    scoreT = scoreR1 + scoreR2 + scoreR3
     f1 = open('quiz.csv', 'a', newline='')
     data = [User_name, scoreT]
+    #d = ['User_name', 'Score']
     data1 = csv.writer(f1)
-
+    #data1.writerow(d)
     data1.writerow(data)
     f1.close()
 
@@ -1045,167 +1411,298 @@ def Quiz():
     f = open('quiz.txt', 'r')
     print()
     c_w_net = c_w + c_w2 + c_w3
-    #print(f'The number of questions are wrong :{c_w_net} which are:-')
+    #print(f'The number of questions are wrong :{c_w_net} \n\twhich are:-')
     r = f.readlines()
     print()
     for i in r:
         print(i)
     print()
+    print(
+        '*****************************************************************************************************'
+    )
 
 
+def ask():
+    print(f'\n\tWhat do you want to Perform...{User_name}')
+    print()
+    print()
+    print('''
+                1 : Start the quiz
+                2 : You want to know the rules again
+                3 : Previous users score data
+                4 : Exit 
+                ''')
 def user():
-
     global count
-    print('''Choices are :-
-                 1 : Start the quiz
-                 2 : You want to know the rules again
-                 3 : Previous users score data
-                 4 : Exit 
-                 ''')
-    print('What do you want to do...')
-    while True:
-        print()
-        user_input = input('Enter the number of operation you want to do : ')
-        if user_input == '1':
-            Quiz()
-            count += 1
-            print('Thanks for playing the quiz')
-            break
-        elif user_input == '2':
-            rules()
+    print()
+
+    if count == 0:
+        while True:
             print()
-            print()
-            print('''Choices are :-
-                    1: Start the quiz
-                    2: Exit''')
-            print('What do you want to do...')
-            print()
-            user_input2 = input(
+            user_input = input(
                 'Enter the number of operation you want to do : ')
-            if user_input2 == '1':
+            if user_input == '1':
                 Quiz()
                 count += 1
-                print()
-                print('\tThank for playing the Quiz')
+                # print('Thanks for playing the quiz')
                 break
-            elif user_input2 == '2':
+            elif user_input == '2':
+                rules()
+                print(
+                    '*****************************************************************************************************'
+                )
                 print()
+                print()
+                print('''Choices are :-
+                    1: Start the quiz
+                    2: Exit''')
+                print('What do you want to do...')
+                print()
+                user_input2 = input(
+                    'Enter the number of operation you want to do : ')
+                if user_input2 == '1':
+                    print()
+                    print(
+                        '*****************************************************************************************************'
+                    )
+                    Quiz()
+                    count += 1
+                    print()
+                    #print('\tThank for playing the Quiz')
+                    break
+                elif user_input2 == '2':
+                    print()
+                    print(
+                        '-------------------------------------------------------------------------------------'
+                    )
+                    print('''\tAre you sure don't you have to play again :-
+                                1 : Yes
+                                2 : No''')
+                    print()
+                    user_input4 = input(
+                        'Enter the number of operation you want to do : ')
+                    if user_input4 == '1':
+                        print()
+                        print(
+                            f'\n\t** Feel baad for you {User_name} , you miss the chance to play this masterpiece **'
+                        )
+                        print('\tThanks for coming...!!!')
+                        exit()
+                    elif user_input4 == '2':
+                        print()
+                        user()
+                    else:
+                        print('Invalid Input')
+
+                    break
+                else:
+                    print('\tInvalid input')
+            elif user_input == '3':
+                f2 = open('quiz.csv', 'r')
+                data2 = csv.reader(f2)
+                print(
+                    '-------------------------------------------------------------------------------------'
+                )
+                print('\nSome previous users data is :-')
+                print()
+                for i in data2:
+                    print('\t', i[0], ':- ', i[1])
+                f2.close()
+                print(
+                    '-------------------------------------------------------------------------------------'
+                )
+                print()
+
+                print()
+                print(
+                    '*****************************************************************************************************'
+                )
+                print('''Choices are :-
+                    1: Start the quiz
+                    2: Exit''')
+                print('What do you want to do...')
+                print()
+                user_input3 = input(
+                    '\tEnter the number of operation you want to do : ')
+                if user_input3 == '1':
+                    Quiz()
+                    count += 1
+                    print()
+                    #print('\tThanks for playing the quiz')
+                    break
+                elif user_input3 == '2':
+                    print()
+                    print()
+                    print(
+                        '''\tAre you sure don't you have to continue this amazing quiz :-
+                                1 : Yes
+                                2 : No''')
+                    print()
+                    user_input4 = input(
+                        'Enter the number of operation you want to do : ')
+                    if user_input4 == '1':
+                        print()
+                        print(
+                            f'\n\t ** Feel bad for you {User_name}, you miss the chance to play this master piece **'
+                        )
+                        print('\tThanks for coming...!!!')
+                        exit()
+                    elif user_input4 == '2':
+                        print(
+                            '-------------------------------------------------------------------------------------'
+                        )
+
+                        print(
+                            f'Great {User_name}, lets continue our quiz journey'
+                        )
+                        print()
+                        user()
+                    else:
+                        print('Invalid Input')
+
+                    break
+                else:
+                    print()
+                    print('\tInvalid input')
+            elif user_input == '4':
+                print()
+                print(
+                    '-------------------------------------------------------------------------------------'
+                )
                 print('''\tAre you sure don't you have to play again :-
-                             1 : Yes
-                             2 : No''')
+                            1 : Yes
+                            2 : No''')
                 print()
                 user_input4 = input(
                     'Enter the number of operation you want to do : ')
                 if user_input4 == '1':
                     print()
-                    print('')
+                    print(
+                        f'\n\t** Feel baad for you {User_name} , you miss the chance to play this masterpiece **'
+                    )
                     print('\tThanks for coming...!!!')
                     exit()
                 elif user_input4 == '2':
+                    print(
+                        '-------------------------------------------------------------------------------------'
+                    )
+                    print(
+                        f'\n\tGreat choice{User_name},lets continue our quiz journey'
+                    )
                     print()
                     user()
                 else:
-                    print('Invalid Input')
-
-                break
-            else:
-                print('\tInvalid input')
-        elif user_input == '3':
-            f2 = open('quiz.csv', 'r')
-            data2 = csv.reader(f2)
-            
-            print('\nSome previous users data is :-')
-            print()
-            for i in data2:
-                print('\t', i[0], ':- ', i[1])
-            f2.close()
-            print()
-            print()
-            print('''Choices are :-
-                    1: Start the quiz
-                    2: Exit''')
-            print('What do you want to do...')
-            print()
-            user_input3 = input(
-                'Enter the number of operation you want to do : ')
-            if user_input3 == '1':
-                Quiz()
-                count += 1
-                print()
-                print('\tThanks for playing the quiz')
-                break
-            elif user_input3 == '2':
-                print()
-                print()
-                print('''\tAre you sure don't you have to play again :-
-                             1 : Yes
-                             2 : No''')
-                print()
-                user_input4 = input(
-                    'Enter the number of operation you want to do : ')
-                if user_input4 == '1':
                     print()
-                    print('')
-                    print('\tThanks for coming...!!!')
-                    exit()
-                elif user_input4 == '2':
-                    print()
-                    user()
-                else:
-                    print('Invalid Input')
-
-                break
+                    print('\tInvalid input')
             else:
+
                 print()
                 print('\tInvalid input')
-        elif user_input == '4':
-            print()
-            print('\tThank for playing')
-            exit()
-        else:
-            print()
-            print('\tInvalid input')
-
+    else:
+        Quiz()
     print()
     restart()
 
 
 def restart():
+    global count
     print()
-    print('''Do you wanna to play again :-
-                 1 : Yes
-                 2 : No''')
+    print('''Do you wanna to continue to the next round :-
+                    1 : Yes
+                    2 : No''')
     print()
     user_input4 = input('Enter the number of operation you want to do : ')
     if user_input4 == '1':
         print()
-        user()
+
+        Quiz()
+        count += 1
+
     else:
         print()
         print()
+        print(
+            '-------------------------------------------------------------------------------------'
+        )
         print('''\tAre you sure don't you have to play again :-
-                     1 : Yes
-                     2 : No''')
+                        1 : Yes
+                        2 : No''')
         print()
         user_input4 = input('Enter the number of operation you want to do : ')
         if user_input4 == '1':
             print()
             print('')
-            print('\tThanks for coming...!!!')
+            print(
+                f'\n\t** Feel bad for you {User_name}, you miss the chance to play this master piece **'
+            )
             exit()
         elif user_input4 == '2':
+            print(
+                '-------------------------------------------------------------------------------------'
+            )
+            print(
+                f'\n\tGreat choice{User_name},lets continue our quiz journey')
             print()
             user()
         else:
-            print('Invalid Input')
+            print()
+            print('\tInvalid input')
 
 
-print('\n\t\t\tWelcome to the quiz')
+def db():
+    global correct
+    global wrong
+    global skip
+    for i in list:
+        if i == 1 or i == 'correct':
+            correct += 1
+        elif i == 0 or i == 'wrong':
+            wrong += 1
+        elif i == 'Skip':
+            skip += 1
+
+    con = ms.connect(host = 'localhost',user = 'root', passwd = 'void',database = 'quizdb')
+    cur = con.cursor()
+    #cur.execute('create database QuizDB')
+    #cur.execute('use QuizDB')
+    #cur.execute('create table Quiz (User_Name varchar(50) , User_Score integer , User_correct_answer integer , User_wrong_answer integer , User_unattempted integer)')
+    cur.execute("insert into Quiz  values('{}',{},{},{},{})".format(User_name, scoreT, correct, wrong, skip))
+    con.commit()
+
+
+print('\n\t\t\t \U0001F600 Welcome to the quiz \U0001F600')
 User_name = input('\nEnter your good name: ')
+user_choice = input('\nYou want to know the rules of the quiz (y/n) : ')
+if user_choice in 'yYyesYES':
+    rules()
+elif user_choice in 'nNnoNO':
+    pass
+else:
+    print()
+    print('\t\tWarning...!!')
+    print('\n\tPlease enter the correct option')
+    print()
+    print(
+        '*****************************************************************************************************'
+    )
+print()
+print()
 print(
-    '\n\nFirst you have to know about the rules of the quiz which is mandatory'
+    '*****************************************************************************************************'
 )
 print()
-rules()
+ask()
+user()  
+db() 
+Quiz()
 print()
-user()
+print(
+    '*****************************************************************************************************'
+)
+print()
+print(f'\n\t\t\t\t ** Thanks for playing the quiz {User_name} **')
+print()
+print(
+    '*****************************************************************************************************'
+)
+print()
